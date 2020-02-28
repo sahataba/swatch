@@ -1,13 +1,16 @@
 package com.mirkocaserta.swatch
 
 import akka.actor.ActorRef
-import concurrent.future
+
+import concurrent.Future
 import java.nio.file._
 import java.nio.file.attribute.BasicFileAttributes
 import java.nio.file.WatchEvent.Kind
+
 import language.implicitConversions
 import org.slf4j.LoggerFactory
-import util.{Success, Failure, Try}
+
+import util.{Failure, Success, Try}
 
 /**
  * A wrapper for a Java 7 [[java.nio.file.WatchService]].
@@ -102,14 +105,14 @@ object Swatch {
 
     import concurrent.ExecutionContext.Implicits.global
 
-    future {
-      import collection.JavaConversions._
+    Future {
+      import scala.collection.JavaConverters._
       var loop = true
 
       while (loop) {
         Try(watchService.take) match {
           case Success(key) ⇒
-            key.pollEvents map {
+            key.pollEvents.asScala map {
               event ⇒
                 import java.nio.file.StandardWatchEventKinds.OVERFLOW
 
