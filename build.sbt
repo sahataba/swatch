@@ -4,7 +4,7 @@ organization := "com.mirkocaserta.swatch"
 
 version := "1.0.1-SNAPSHOT"
 
-scalaVersion := "2.10.1"
+scalaVersion := "2.12.6"
 
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.0.11" % "test",
