@@ -34,7 +34,7 @@ with AnyWordSpecLike with Matchers with BeforeAndAfterAll {
   }
 
   override def afterAll {
-    system.shutdown
+    system.terminate
   }
 
   private[this] def tmp = Files.createTempDirectory(Paths.get("target"), "watch-actor-")
