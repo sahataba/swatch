@@ -1,18 +1,22 @@
 package com.mirkocaserta.swatch
 
-import akka.actor.{Props, ActorSystem}
-import akka.testkit.{DefaultTimeout, TestKit, ImplicitSender}
+import akka.actor.{ActorSystem, Props}
+import akka.testkit.{DefaultTimeout, ImplicitSender, TestKit}
+
 import com.typesafe.config.ConfigFactory
+
 import concurrent.duration._
-import java.nio.file.{Paths, Files}
+import java.nio.file.{Files, Paths}
+
 import language.postfixOps
-import org.scalatest.{WordSpec, BeforeAndAfterAll}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.BeforeAndAfterAll
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpecLike
 
 class SwatchActorSpec extends TestKit(ActorSystem("SwatchActorSpec",
   ConfigFactory.parseString(SwatchActorSpec.config)))
 with DefaultTimeout with ImplicitSender
-with WordSpec with ShouldMatchers with BeforeAndAfterAll {
+with AnyWordSpecLike with Matchers with BeforeAndAfterAll {
 
   import Swatch._
 
