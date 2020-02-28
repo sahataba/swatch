@@ -16,15 +16,3 @@ libraryDependencies ++= Seq(
 )
 
 scalacOptions ++= Seq("-encoding", "UTF-8", "-deprecation", "-unchecked", "-feature")
-
-publishMavenStyle := true
-
-publishTo <<= version { (v: String) =>
-  val bintray = "https://api.bintray.com/maven/mcaserta/"
-  if (v.trim.endsWith("SNAPSHOT"))
-    Some("BinTray Snapshots" at bintray + "github-snapshots/swatch")
-  else
-    Some("BinTray Releases"  at bintray + "github-releases/swatch")
-}
-
-credentials += Credentials(Path.userHome / ".ivy2" / ".auth-bintray")
