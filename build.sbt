@@ -6,7 +6,7 @@ version := "1.0.1-SNAPSHOT"
 
 scalaVersion := "2.12.6"
 
-val akkaVersion = "2.5.11"
+val akkaVersion = "2.5.26"
 
 libraryDependencies ++= Seq(
   "ch.qos.logback" % "logback-classic" % "1.0.11" % "test",
