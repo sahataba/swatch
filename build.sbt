@@ -4,7 +4,7 @@ organization := "com.mirkocaserta.swatch"
 
 version := "1.0.1-SNAPSHOT"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.13.2"
 
 val akkaVersion = "2.5.26"
 
