@@ -112,7 +112,7 @@ object Swatch {
       while (loop) {
         Try(watchService.take) match {
           case Success(key) ⇒
-            key.pollEvents.asScala map {
+            key.pollEvents.asScala foreach {
               event ⇒
                 import java.nio.file.StandardWatchEventKinds.OVERFLOW
 
