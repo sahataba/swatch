@@ -93,6 +93,7 @@ object Swatch {
             recurse: Boolean = false) {
     log.debug(s"watch(): entering; path='$path', eventTypes='$eventTypes', listener='$listener', recurse=$recurse")
     val watchService = FileSystems.getDefault.newWatchService
+    log.trace(s"watchService: $watchService, fs: ${FileSystems.getDefault}")
 
     if (recurse) {
       Files.walkFileTree(path, new SimpleFileVisitor[Path] {
@@ -112,12 +113,14 @@ object Swatch {
       while (loop) {
         Try(watchService.take) match {
           case Success(key) ⇒
+            log.debug(s"watch(): took from watchService; key==$key")
+
             key.pollEvents.asScala foreach {
               event ⇒
                 import java.nio.file.StandardWatchEventKinds.OVERFLOW
 
                 event.kind match {
-                  case OVERFLOW ⇒ // weeee
+                  case OVERFLOW ⇒ log.debug(s"watch(): got overflow event - underlying APIs were overloaded!")
                   case _ ⇒
                     val ev = event.asInstanceOf[WatchEvent[Path]]
                     val tpe = kind2EventType(ev.kind)
@@ -138,7 +141,8 @@ object Swatch {
           case Failure(e: ClosedWatchServiceException) =>
             log.debug("watch(): watch was closed elsewhere, existing the loop")
             loop = false
-          case Failure(e) ⇒ // ignore failure, just as IRL
+          case Failure(e) => // that wasn't supposed to happen
+            log.debug("watch(): unexpected exception from watchService.take", e)
         }
       }
     }
