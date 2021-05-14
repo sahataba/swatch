@@ -134,6 +134,10 @@ object Swatch {
                     }
                 }
             }
+          case Failure(e: InterruptedException) ⇒ // keep on truckin', this is literally telling us to try again
+          case Failure(e: ClosedWatchServiceException) =>
+            log.debug("watch(): watch was closed elsewhere, existing the loop")
+            loop = false
           case Failure(e) ⇒ // ignore failure, just as IRL
         }
       }
