@@ -19,7 +19,7 @@ object Swatch {
 
   val log = LoggerFactory.getLogger(getClass)
 
-  type Listener = (SwatchEvent) ⇒ Unit
+  type Listener = (SwatchEvent) => Unit
 
   sealed trait EventType
 
@@ -45,10 +45,10 @@ object Swatch {
     import java.nio.file.StandardWatchEventKinds._
 
     et match {
-      case Create ⇒ ENTRY_CREATE
-      case Modify ⇒ ENTRY_MODIFY
-      case Delete ⇒ ENTRY_DELETE
-      case Overflow ⇒ OVERFLOW
+      case Create => ENTRY_CREATE
+      case Modify => ENTRY_MODIFY
+      case Delete => ENTRY_DELETE
+      case Overflow => OVERFLOW
     }
   }
 
@@ -56,10 +56,10 @@ object Swatch {
     import java.nio.file.StandardWatchEventKinds._
 
     kind match {
-      case ENTRY_CREATE ⇒ Create
-      case ENTRY_MODIFY ⇒ Modify
-      case ENTRY_DELETE ⇒ Delete
-      case _ ⇒ Overflow
+      case ENTRY_CREATE => Create
+      case ENTRY_MODIFY => Modify
+      case ENTRY_DELETE => Delete
+      case _ => Overflow
     }
   }
 
@@ -90,7 +90,7 @@ object Swatch {
   def watch(path: Path,
             eventTypes: Seq[EventType],
             listener: Listener,
-            recurse: Boolean = false) {
+            recurse: Boolean = false): Unit = {
     log.debug(s"watch(): entering; path='$path', eventTypes='$eventTypes', listener='$listener', recurse=$recurse")
     val watchService = FileSystems.getDefault.newWatchService
     log.trace(s"watchService: $watchService, fs: ${FileSystems.getDefault}")
@@ -112,22 +112,22 @@ object Swatch {
 
       while (loop) {
         Try(watchService.take) match {
-          case Success(key) ⇒
+          case Success(key) =>
             log.debug(s"watch(): took from watchService; key==$key")
 
             key.pollEvents.asScala foreach {
-              event ⇒
+              event =>
                 import java.nio.file.StandardWatchEventKinds.OVERFLOW
 
                 event.kind match {
-                  case OVERFLOW ⇒ log.debug(s"watch(): got overflow event - underlying APIs were overloaded!")
-                  case _ ⇒
+                  case OVERFLOW => log.debug(s"watch(): got overflow event - underlying APIs were overloaded!")
+                  case _ =>
                     val ev = event.asInstanceOf[WatchEvent[Path]]
                     val tpe = kind2EventType(ev.kind)
                     val notification = tpe match {
-                      case Create ⇒ Create(path.resolve(ev.context))
-                      case Modify ⇒ Modify(path.resolve(ev.context))
-                      case Delete ⇒ Delete(path.resolve(ev.context))
+                      case Create => Create(path.resolve(ev.context))
+                      case Modify => Modify(path.resolve(ev.context))
+                      case Delete => Delete(path.resolve(ev.context))
                     }
                     log.debug(s"watch(): notifying listener; notification=$notification")
                     listener(notification)
@@ -137,7 +137,7 @@ object Swatch {
                     }
                 }
             }
-          case Failure(e: InterruptedException) ⇒ // keep on truckin', this is literally telling us to try again
+          case Failure(e: InterruptedException) => // keep on truckin', this is literally telling us to try again
           case Failure(e: ClosedWatchServiceException) =>
             log.debug("watch(): watch was closed elsewhere, existing the loop")
             loop = false

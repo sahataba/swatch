@@ -19,13 +19,13 @@ class SwatchActor extends Actor with ActorLogging {
   import Swatch._
 
   def receive = {
-    case Watch(path, eventTypes, recurse, listener) ⇒
+    case Watch(path, eventTypes, recurse, listener) =>
       log.debug(s"receive(): got a watch request; path='$path', eventTypes=$eventTypes, recurse=$recurse, listener='$listener'")
 
       val senderRef = listener getOrElse sender
 
       val lstnr = {
-        event: SwatchEvent ⇒
+        event: SwatchEvent =>
           log.debug(s"receive(): notifying; event='$event', senderRef='$senderRef'")
           senderRef ! event
       }
